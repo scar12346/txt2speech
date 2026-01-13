@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Text to Speech | Voice, Accent & Download</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- ✅ MODERN IMPROVED CSS -->
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    }
+
+    :root {
+      --card: rgba(255, 255, 255, 0.88);
+      --border: rgba(0, 0, 0, 0.08);
+      --text: #0f172a;
+      --muted: #475569;
+      --ring: rgba(37, 99, 235, 0.15);
+      --shadow: 0 20px 60px rgba(2, 6, 23, 0.12);
+    }
+
+    body {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 16px;
+      color: var(--text);
+      background:
+        radial-gradient(900px 400px at 20% 10%, rgba(14, 165, 233, 0.25), transparent 60%),
+        radial-gradient(800px 400px at 80% 90%, rgba(37, 99, 235, 0.22), transparent 60%),
+        linear-gradient(135deg, #f8fafc, #eef2ff);
+    }
+
+    .box {
+      width: 100%;
+      max-width: 860px;
+      border-radius: 22px;
+      padding: 22px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+      animation: pop 320ms ease-out;
+    }
+
+    @keyframes pop {
+      from { transform: translateY(8px); opacity: 0; }
+      to   { transform: translateY(0); opacity: 1; }
+    }
+
+    h1 {
+      font-size: 1.9rem;
+      font-weight: 900;
+      text-align: center;
+      letter-spacing: -0.02em;
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 0.95rem;
+      color: var(--muted);
+      margin-top: 6px;
+      margin-bottom: 18px;
+    }
+
+    label {
+      display: block;
+      margin: 12px 0 6px;
+      font-weight: 800;
+      font-size: 0.92rem;
+      color: #0b1220;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 190px;
+      padding: 14px 14px;
+      border-radius: 16px;
+      font-size: 1rem;
+      border: 1px solid rgba(15, 23, 42, 0.16);
+      background: rgba(255, 255, 255, 0.92);
+      outline: none;
+      line-height: 1.45;
+      transition: 0.18s ease;
+    }
+
+    textarea::placeholder { color: #94a3b8; }
+
+    textarea:focus {
+      border-color: rgba(37,99,235,0.7);
+      box-shadow: 0 0 0 6px var(--ring);
+      transform: translateY(-1px);
+    }
+
+    select, input[type=range], input[type=text] {
+      width: 100%;
+      padding: 11px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(15, 23, 42, 0.16);
+      background: rgba(255, 255, 255, 0.92);
+      font-size: 0.96rem;
+      outline: none;
+      transition: 0.18s ease;
+    }
+
+    select:focus, input[type=text]:focus {
+      border-color: rgba(37,99,235,0.7);
+      box-shadow: 0 0 0 6px var(--ring);
+      transform: translateY(-1px);
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      align-items: end;
+      margin-top: 10px;
+    }
+
+    .smallRow {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .valueTag {
+      font-size: 0.85rem;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: rgba(37,99,235,0.10);
+      color: #1d4ed8;
+      font-weight: 900;
+      min-width: 84px;
+      text-align: center;
+      border: 1px solid rgba(37,99,235,0.18);
+    }
+
+    .btn-row {
+      margin-top: 12px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    button {
+      border: none;
+      border-radius: 16px;
+      padding: 13px;
+      font-weight: 900;
+      cursor: pointer;
+      font-size: 0.98rem;
+      transition: transform 0.08s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+    }
+
+    button:hover { transform: translateY(-1px); }
+    button:active { transform: translateY(0px) scale(0.99); }
+    button:disabled { opacity: 0.65; cursor: not-allowed; transform: none; }
+
+    .speakBtn {
+      color: white;
+      background: linear-gradient(135deg, #2563eb, #0ea5e9);
+      box-shadow: 0 16px 40px rgba(37, 99, 235, 0.25);
+    }
+
+    .stopBtn {
+      color: #0f172a;
+      background: rgba(15, 23, 42, 0.06);
+      border: 1px solid rgba(15, 23, 42, 0.12);
+    }
+
+    .downloadBtn {
+      color: white;
+      background: linear-gradient(135deg, #16a34a, #22c55e);
+      box-shadow: 0 16px 40px rgba(34, 197, 94, 0.22);
+    }
+
+    .footerInfo {
+      margin-top: 10px;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      font-size: 0.88rem;
+    }
+
+    .pill {
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(15, 23, 42, 0.1);
+      background: rgba(255, 255, 255, 0.75);
+      color: #0f172a;
+      font-weight: 800;
+    }
+
+    .warning {
+      background: rgba(255, 237, 213, 0.75);
+      border-color: rgba(251, 146, 60, 0.32);
+      color: #9a3412;
+    }
+
+    .note {
+      margin-top: 14px;
+      font-size: 0.86rem;
+      color: #64748b;
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    /* Loading shine effect */
+    .loading {
+      position: relative;
+      overflow: hidden;
+      opacity: 0.9;
+    }
+    .loading::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      transform: translateX(-120%);
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.32), transparent);
+      animation: shine 1s infinite linear;
+    }
+    @keyframes shine {
+      to { transform: translateX(120%); }
+    }
+
+    @media (max-width: 700px) {
+      .row { grid-template-columns: 1fr; }
+      .btn-row { grid-template-columns: 1fr; }
+      textarea { min-height: 170px; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="box">
+    <h1>Text to Speech</h1>
+    <p class="subtitle">Choose accent & voice, speak or download as MP3.</p>
+
+    <label for="text">Your Text</label>
+    <textarea id="text" placeholder="Type something... (no limit)"></textarea>
+
+    <div class="footerInfo" style="margin-top:10px;">
+      <div class="pill" id="counter">0 characters</div>
+      <div class="pill" id="status">Ready ✅</div>
+    </div>
+
+    <div class="row">
+      <div>
+        <label for="accentSelect">Select Accent</label>
+        <select id="accentSelect">
+          <option value="indian">🇮🇳 Indian (Preferred)</option>
+          <option value="all">🌍 All accents</option>
+          <option value="us">🇺🇸 US / American</option>
+          <option value="uk">🇬🇧 UK / British</option>
+          <option value="australia">🇦🇺 Australian</option>
+          <option value="other">🔁 Other accents</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="voiceSearch">Search Voice</label>
+        <input id="voiceSearch" type="text" placeholder="Example: Indian, Hindi, female, male..." />
+      </div>
+    </div>
+
+    <label for="voiceSelect">Select Voice (Male / Female / Neutral)</label>
+    <select id="voiceSelect"></select>
+
+    <div class="footerInfo">
+      <div class="pill" id="voiceInfo">Voice: -</div>
+      <div class="pill warning" id="downloadInfo">Download uses VoiceRSS API key</div>
+    </div>
+
+    <label>Speed</label>
+    <div class="smallRow">
+      <input type="range" id="rate" min="0.5" max="2" step="0.1" value="1">
+      <span class="valueTag" id="rateValue">1.0x</span>
+    </div>
+
+    <label>Pitch</label>
+    <div class="smallRow">
+      <input type="range" id="pitch" min="0" max="2" step="0.1" value="1">
+      <span class="valueTag" id="pitchValue">1.0</span>
+    </div>
+
+    <div class="btn-row">
+      <button class="speakBtn" id="speakBtn">🔊 Speak</button>
+      <button class="stopBtn" id="stopBtn">⏹ Stop</button>
+      <button class="downloadBtn" id="downloadBtn">⬇ Download MP3</button>
+    </div>
+
+    <p class="note">
+      ✅ Speak uses your browser voices.<br>
+      ⬇ Download MP3 uses VoiceRSS API key (put your key in JS).
+      <br><b>Shortcut:</b> Ctrl + Enter to Speak
+    </p>
+  </div>
+
+  <!-- ✅ IMPROVED JS (ALL MIXED) -->
+  <script>
+    const textInput    = document.getElementById("text");
+    const speakBtn     = document.getElementById("speakBtn");
+    const stopBtn      = document.getElementById("stopBtn");
+    const downloadBtn  = document.getElementById("downloadBtn");
+    const voiceSelect  = document.getElementById("voiceSelect");
+    const accentSelect = document.getElementById("accentSelect");
+    const rateInput    = document.getElementById("rate");
+    const pitchInput   = document.getElementById("pitch");
+    const rateValue    = document.getElementById("rateValue");
+    const pitchValue   = document.getElementById("pitchValue");
+    const counter      = document.getElementById("counter");
+    const statusBox    = document.getElementById("status");
+    const voiceInfo    = document.getElementById("voiceInfo");
+    const voiceSearch  = document.getElementById("voiceSearch");
+
+    let voices = [];
+    let isSpeaking = false;
+
+    // ✅ save text (no loss on refresh)
+    const STORAGE_KEY = "tts_saved_text";
+    textInput.value = localStorage.getItem(STORAGE_KEY) || "";
+
+    // ========= HELPERS =========
+    function setStatus(text, ok = true) {
+      statusBox.textContent = text;
+      statusBox.style.background = ok ? "rgba(220,252,231,0.7)" : "rgba(255,237,213,0.7)";
+      statusBox.style.border = ok ? "1px solid rgba(34,197,94,0.25)" : "1px solid rgba(251,146,60,0.32)";
+      statusBox.style.color = ok ? "#166534" : "#9a3412";
+    }
+
+    function updateCounter() {
+      counter.textContent = `${textInput.value.length} characters`;
+      localStorage.setItem(STORAGE_KEY, textInput.value);
+    }
+    textInput.addEventListener("input", updateCounter);
+    updateCounter();
+
+    function getGenderFromName(name) {
+      const lower = (name || "").toLowerCase();
+      if (/(female|woman|girl|zira|sona|heera|jess|sara|anya)/.test(lower)) return "female";
+      if (/(male|man|boy|david|mark|ravish|arjun|raj|alex)/.test(lower)) return "male";
+      return "other";
+    }
+
+    function getAccent(voice) {
+      const lang = (voice.lang || "").toLowerCase();
+      const name = (voice.name || "").toLowerCase();
+
+      if (lang.includes("en-in") || lang.includes("hi-in") || lang.endsWith("-in") || name.includes("india") || name.includes("hindi")) return "indian";
+      if (lang.includes("en-us") || name.includes("american")) return "us";
+      if (lang.includes("en-gb") || name.includes("british")) return "uk";
+      if (lang.includes("en-au") || name.includes("australia")) return "australia";
+
+      return "other";
+    }
+
+    function pickBestIndianVoice(list) {
+      return (
+        list.find(v => (v.lang || "").toLowerCase().includes("hi-in")) ||
+        list.find(v => (v.lang || "").toLowerCase().includes("en-in")) ||
+        list.find(v => (v.name || "").toLowerCase().includes("india")) ||
+        list[0]
+      );
+    }
+
+    function renderVoiceInfo() {
+      const idx = parseInt(voiceSelect.value, 10);
+      const v = voices[idx];
+      voiceInfo.textContent = v ? `Voice: ${v.name} (${v.lang})` : "Voice: -";
+    }
+
+    // ========= VOICES =========
+    function populateVoices() {
+      voices = speechSynthesis.getVoices() || [];
+
+      const accentFilter = accentSelect.value || "indian";
+      const keyword = (voiceSearch.value || "").trim().toLowerCase();
+
+      let filtered = voices.filter(v => {
+        const acc = getAccent(v);
+        const name = (v.name || "").toLowerCase();
+        const lang = (v.lang || "").toLowerCase();
+
+        const accentOk =
+          (accentFilter === "all") ||
+          (accentFilter === "other" ? acc === "other" : acc === accentFilter);
+
+        const keywordOk =
+          !keyword ||
+          name.includes(keyword) ||
+          lang.includes(keyword);
+
+        return accentOk && keywordOk;
+      });
+
+      if (!filtered.length) filtered = voices.slice();
+
+      const female = filtered.filter(v => getGenderFromName(v.name) === "female");
+      const male   = filtered.filter(v => getGenderFromName(v.name) === "male");
+      const other  = filtered.filter(v => getGenderFromName(v.name) === "other");
+
+      voiceSelect.innerHTML = "";
+
+      const addGroup = (label, list) => {
+        if (!list.length) return;
+        const group = document.createElement("optgroup");
+        group.label = label;
+        list.forEach(v => {
+          const option = document.createElement("option");
+          option.value = voices.indexOf(v);
+          option.textContent = `${v.name} (${v.lang})`;
+          group.appendChild(option);
+        });
+        voiceSelect.appendChild(group);
+      };
+
+      addGroup("🔸 Female Voices", female);
+      addGroup("🔹 Male Voices", male);
+      addGroup("⚪ Other Voices", other);
+
+      if (voiceSelect.options.length) {
+        if (accentFilter === "indian" && !keyword) {
+          const best = pickBestIndianVoice(filtered);
+          voiceSelect.value = String(voices.indexOf(best));
+        } else {
+          voiceSelect.selectedIndex = 0;
+        }
+      }
+
+      renderVoiceInfo();
+    }
+
+    function loadVoices() {
+      populateVoices();
+      setStatus("Voices loaded ✅", true);
+    }
+
+    speechSynthesis.onvoiceschanged = loadVoices;
+    loadVoices();
+
+    accentSelect.addEventListener("change", populateVoices);
+    voiceSearch.addEventListener("input", populateVoices);
+    voiceSelect.addEventListener("change", renderVoiceInfo);
+
+    rateInput.addEventListener("input", () => {
+      rateValue.textContent = Number(rateInput.value).toFixed(1) + "x";
+    });
+
+    pitchInput.addEventListener("input", () => {
+      pitchValue.textContent = Number(pitchInput.value).toFixed(1);
+    });
+
+    // ========= SPEAK =========
+    function speakText() {
+      const text = textInput.value.trim();
+      if (!text) return alert("Please type some text first.");
+
+      if (!voices.length || voiceSelect.options.length === 0) {
+        return alert("No voices found. Try changing accent or search keyword.");
+      }
+
+      // stop old
+      speechSynthesis.cancel();
+
+      const utterance = new SpeechSynthesisUtterance(text);
+      const selectedVoiceIndex = parseInt(voiceSelect.value, 10);
+      const selectedVoice = voices[selectedVoiceIndex];
+
+      if (selectedVoice) utterance.voice = selectedVoice;
+
+      utterance.rate = parseFloat(rateInput.value);
+      utterance.pitch = parseFloat(pitchInput.value);
+
+      speakBtn.disabled = true;
+      downloadBtn.disabled = true;
+      isSpeaking = true;
+      setStatus("Speaking... 🔊", true);
+
+      utterance.onend = () => {
+        speakBtn.disabled = false;
+        downloadBtn.disabled = false;
+        isSpeaking = false;
+        setStatus("Done ✅", true);
+      };
+
+      utterance.onerror = () => {
+        speakBtn.disabled = false;
+        downloadBtn.disabled = false;
+        isSpeaking = false;
+        setStatus("Speech failed ❌", false);
+      };
+
+      speechSynthesis.speak(utterance);
+    }
+
+    function stopSpeaking() {
+      speechSynthesis.cancel();
+      speakBtn.disabled = false;
+      downloadBtn.disabled = false;
+      isSpeaking = false;
+      setStatus("Stopped ⏹", true);
+    }
+
+    speakBtn.addEventListener("click", speakText);
+    stopBtn.addEventListener("click", stopSpeaking);
+
+    // ✅ Shortcut: Ctrl + Enter
+    document.addEventListener("keydown", (e) => {
+      if (e.ctrlKey && e.key === "Enter") {
+        speakText();
+      }
+    });
+
+    // ========= DOWNLOAD USING VOICERSS =========
+    const VOICERSS_API_KEY = "YOUR_VOICERSS_API_KEY_HERE"; // 🔑 put your key here
+
+    function getLangCodeForDownload(accent) {
+      switch (accent) {
+        case "indian":     return "en-in"; // hi-in for Hindi
+        case "us":         return "en-us";
+        case "uk":         return "en-gb";
+        case "australia":  return "en-au";
+        default:           return "en-us";
+      }
+    }
+
+    async function downloadAudio() {
+      const text = textInput.value.trim();
+      if (!text) return alert("Please type some text first.");
+
+      if (!VOICERSS_API_KEY || VOICERSS_API_KEY.includes("YOUR_VOICERSS_API_KEY_HERE")) {
+        alert("Please add your VoiceRSS API key in the code first.");
+        return;
+      }
+
+      const accent = accentSelect.value || "indian";
+      const lang = getLangCodeForDownload(accent);
+
+      const url =
+        "https://api.voicerss.org/?" +
+        "key=" + encodeURIComponent(VOICERSS_API_KEY) +
+        "&hl=" + encodeURIComponent(lang) +
+        "&src=" + encodeURIComponent(text) +
+        "&c=MP3&f=44khz_16bit_stereo";
+
+      try {
+        downloadBtn.disabled = true;
+        downloadBtn.classList.add("loading");
+        downloadBtn.textContent = "⏳ Generating...";
+        setStatus("Generating MP3... ⏳", true);
+
+        const response = await fetch(url);
+        const contentType = response.headers.get("content-type") || "";
+        const blob = await response.blob();
+
+        if (contentType.includes("text")) {
+          const msg = await blob.text();
+          throw new Error(msg || "VoiceRSS error");
+        }
+
+        const blobUrl = URL.createObjectURL(blob);
+
+        const a = document.createElement("a");
+        a.href = blobUrl;
+        a.download = "tts_audio.mp3";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+
+        URL.revokeObjectURL(blobUrl);
+        setStatus("Downloaded ✅", true);
+
+      } catch (err) {
+        console.error(err);
+        setStatus("Download failed ❌", false);
+        alert("Failed to download MP3.\n\nReason: " + err.message);
+      } finally {
+        downloadBtn.disabled = false;
+        downloadBtn.classList.remove("loading");
+        downloadBtn.textContent = "⬇ Download MP3";
+      }
+    }
+
+    downloadBtn.addEventListener("click", downloadAudio);
+  </script>
+</body>
+</html>
